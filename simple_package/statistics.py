@@ -98,17 +98,34 @@ def summary(data):
 
 
 def pretty_print(data, label=None):
-	"""Compute and print a user-friendly summary of the data.
+    """Compute and print a user-friendly summary of the data.
 
-	Example output:
-	  Data: sample
-	  count = 10, mean = 2.3400, median = 2.0000, std = 1.2300
-	"""
-	s = summary(data)
-	count = len(_ensure_array(data))
-	title = f"Data: {label}" if label else "Data summary"
-	print(title)
-	print(f"count = {count}, mean = {s['mean']:.4f}, median = {s['median']:.4f}, std = {s['std']:.4f}")
+    Example output:
+        ----------------------
+        | Data: sample       |
+        ----------------------
+        | Count:   10        |
+        | Mean:    2.3400    |
+        | Median:  2.0000    |
+        | Std:     1.2300    |
+        ----------------------
+    """
+    s = summary(data)
+    count = len(_ensure_array(data))
+
+    # Title formatting
+    title = f"Data: {label}" if label else "Data Summary"
+    line = "-" * (len(title) + 4)
+
+    print(line)
+    print(f"| {title} |")
+    print(line)
+    print(f"| Count:   {count:<9} |")
+    print(f"| Mean:    {s['mean']:.4f}    |")
+    print(f"| Median:  {s['median']:.4f}    |")
+    print(f"| Std:     {s['std']:.4f}    |")
+    print(line)
+
 
 
 

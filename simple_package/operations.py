@@ -27,6 +27,10 @@ import math
 ##    trigonometric functions, logarithms, etc.).
 ##
 
+# -------------------------------------------
+# Section 1: Basic operations
+# -------------------------------------------
+
 def add(a, b):
     """Add two numbers."""
     return a + b
@@ -41,22 +45,27 @@ def multiply(a, b):
 
 def divide(a, b):
     """Divide one number by another."""
+    if b == 0:
+        raise ZeroDivisionError("Cannot divide by zero.")
     return a / b
 
 
+# ---------------------------------------------------
+# Section 2: Definition of utility helper functions
+# ---------------------------------------------------
 
-# -------------------------------------------
-# Utility helpers
-# -------------------------------------------
-
+# turns an expection into a formatted error string
 def _fmt_err(e):
     return f"Error: {e}"
 
+# defines common mathematical constants
 CONSTANTS = {
     'pi': math.pi,
     'e': math.e,
 }
 
+# making use of the eval function to evaluate simple expressions
+# but disabling all other built-ins, so users can only access functions we have defined
 def _safe_eval(expr):
     """Safely evaluate simple expressions like pi/2 or (3+4)/2."""
     try:
@@ -64,6 +73,7 @@ def _safe_eval(expr):
     except Exception:
         raise ValueError("invalid expression")
 
+# allows user to access the last result, handles exceptions, if any
 def _parse_number(s, last):
     """Convert input string to a number or constant."""
     s = s.lower()
@@ -87,23 +97,23 @@ def _parse_number(s, last):
 
 
 # -------------------------------------------
-# Interface function
+# Section 3: Interface function
 # -------------------------------------------
 
 def interface():
     """Fully-featured command-line calculator."""
 
     ops = {
-        # binary operations
-        'add': add, 'a': add,
-        'subtract': subtract, 'sub': subtract,
-        'multiply': multiply, 'mul': multiply,
-        'divide': divide, 'div': divide,
+        # mapping text commands to binary operations
+        'add': add,
+        'subtract': subtract, 
+        'multiply': multiply, 
+        'divide': divide, 
         'pow': lambda a, b: a ** b,
         'max': max,
         'min': min,
 
-        # unary operations
+        # mapping text commands to unary operations
         'sin': lambda x: math.sin(x),
         'cos': lambda x: math.cos(x),
         'tan': lambda x: math.tan(x),
@@ -115,7 +125,7 @@ def interface():
         'round': lambda x: round(x),
     }
 
-    # Auto-generated help
+    # scans the ops dictonary to generate help text
     help_text = "Available commands:\n\nBinary (x op y):\n"
     unary_ops, binary_ops = [], []
 
@@ -144,15 +154,18 @@ def interface():
     )
 
     print(help_text)
-
+    
+    # we start with no last result
     last = None
+    print("\nHello! 👋 Welcome to the Simple Calculator.")
+    print("Type a command below, or type 'help' to see all available operations.\n")
 
-    # Main loop
+    # We begin the main loop
     while True:
         try:
-            line = input("calc> ").strip()
+            line = input("Type your command here → ").strip()
         except (EOFError, KeyboardInterrupt):
-            print("\nExiting calculator.")
+            print("\n\nGoodbye! Thanks for using the calculator.")
             break
 
         if not line:
@@ -162,7 +175,7 @@ def interface():
         cmd = parts[0].lower()
 
         if cmd in ("exit", "quit"):
-            print("Exiting calculator.")
+            print("\n\nGoodbye! Thanks for using the calculator.")
             break
 
         if cmd in ("help", "h", "?"):
@@ -170,7 +183,7 @@ def interface():
             continue
 
         if cmd not in ops:
-            print(f"Unknown command '{cmd}'. Type 'help'.")
+            print(f"Unfortunately you have entered an unknown command '{cmd}'. Please type 'help', so we can try to assist you!.")
             continue
 
         func = ops[cmd]
@@ -194,14 +207,17 @@ def interface():
                 continue
 
             else:
-                print("Wrong number of arguments. Type 'help'.")
+                print("Unfortunately you have entered an inncorrect number of arguments. Please type 'help', so we can try to assist you!")
         except Exception as e:
             print(_fmt_err(e))
 
 
 # -------------------------------------------
-# Entry point
+# Section 4: Script entry point
 # -------------------------------------------
 
+
+# If this file is run directly (e.g. "python operations.py"),
+# start the calculator interface.
 if __name__ == "__main__":
     interface()
